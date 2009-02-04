@@ -59,9 +59,8 @@ class botSystemRecaptcha{
 	function addFormToBuffer()
 	{
 		$option = mosGetParam($_REQUEST, 'option');
-		$task = mosGetParam($_REQUEST, 'task');
 		
-		if( $this->params->get('addToContact',0) == 1 && $option == 'com_contact' && $task == 'view' ){
+		if( $this->params->get('addToContact',0) == 1 && $option == 'com_contact' ){
 			return true;
 		}
 		return false;
