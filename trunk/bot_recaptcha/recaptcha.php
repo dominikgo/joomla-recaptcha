@@ -47,7 +47,7 @@ class botSystemRecaptcha{
 		$option = mosGetParam($_REQUEST, 'option');
 		$task = mosGetParam($_REQUEST, 'op');
 		
-		if( $this->params->get('addToContact',0) == 1 &&
+		if( $this->params->get('addToContact',1) == 1 &&
 		   $option == 'com_contact' &&
 		   $task == 'sendmail'
 		){
@@ -60,7 +60,7 @@ class botSystemRecaptcha{
 	{
 		$option = mosGetParam($_REQUEST, 'option');
 		
-		if( $this->params->get('addToContact',0) == 1 && $option == 'com_contact' ){
+		if( $this->params->get('addToContact',1) == 1 && $option == 'com_contact' ){
 			return true;
 		}
 		return false;

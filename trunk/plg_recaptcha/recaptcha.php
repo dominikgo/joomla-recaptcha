@@ -31,7 +31,7 @@ class plgSystemRecaptcha extends JPlugin{
 		$view = JRequest::getCmd('view');
 		$task = JRequest::getCmd('task');
 		
-		if( $this->params->get('addToContact',0) == 1 &&
+		if( $this->params->get('addToContact',1) == 1 &&
 		   $option == 'com_contact' &&
 		   $task == 'submit'
 		){
@@ -44,7 +44,7 @@ class plgSystemRecaptcha extends JPlugin{
 	{
 		$option = JRequest::getCmd('option');
 		$view = JRequest::getCmd('view');
-		if( $this->params->get('addToContact',0) == 1 && $option == 'com_contact' && $view == 'contact' ){
+		if( $this->params->get('addToContact',1) == 1 && $option == 'com_contact' && $view == 'contact' ){
 			return true;
 		}
 		return false;
