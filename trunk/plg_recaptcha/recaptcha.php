@@ -58,7 +58,6 @@ class plgSystemRecaptcha extends JPlugin{
 	function onAfterRoute()
 	{
 		if( !$this->processPage() ){
-			JRequest::setVar('subject','No Process');
 			return;
 		}
 		if( ReCaptcha::get('submitted') && !ReCaptcha::get('success') ){
@@ -77,6 +76,14 @@ class plgSystemRecaptcha extends JPlugin{
 		// add it before the submit button
 		$re = "/<(button|input)(.*type=['\"]submit['\"].*)?>/i";
 		$buffer = preg_replace_callback($re, array(&$this,'_addFormCallback'), $buffer);
+		
+		// set values...
+		$inputsRe = "/<input(.*name=(['\"])(.+?)\\2.*)?>/i";
+		$textareaRe = "/<textarea(.*name=(['\"])text\\2.*)?>(.*)?<\/textarea>/i";
+		
+		$buffer = preg_replace_callback($inputsRe, array(&$this,'_addInputValues'), $buffer);
+		$buffer = preg_replace_callback($textareaRe, array(&$this,'_addTextareaValue'), $buffer);
+		
 		$document->setBuffer($buffer,'component');
 	}
 	
@@ -84,4 +91,33 @@ class plgSystemRecaptcha extends JPlugin{
 	{
 		return ReCaptcha::get('html').'<br />'.$matches[0];
 	}
+	
+	function _addInputValues($matches)
+	{
+		switch($matches[3]){
+			case 'name':
+			case 'email':
+			case 'subject':
+				$re = "/value=(['\"])(.*?)\\1/i";
+				$this->_replacementValue = JRequest::getVar($matches[3]);
+				$matches[0] = preg_replace_callback($re, array(&$this, '_replaceValue'), $matches[0]);
+				break;
+		}
+		return $matches[0];
+	}
+	
+	function _addTextareaValue($matches)
+	{
+		$attrs = $matches[1];
+		$val = JRequest::getString('text');
+		return "<textarea$attrs>$val</textarea>";
+	}
+	
+	function _replaceValue($matches)
+	{
+		$val = addslashes($this->_replacementValue);
+		return "value='$val'";
+	}
+	
+	
 }
