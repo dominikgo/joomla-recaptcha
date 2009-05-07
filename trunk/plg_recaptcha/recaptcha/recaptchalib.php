@@ -91,7 +91,7 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
         return $response;
 }
 
-
+$recaptcha_ajax_instances = 0;
 
 /**
  * Gets the challenge HTML (javascript and non-javascript version).
@@ -103,29 +103,58 @@ function _recaptcha_http_post($host, $path, $data, $port = 80) {
 
  * @return string - The HTML to be embedded in the user's form.
  */
-function recaptcha_get_html ($pubkey, $error = null, $use_ssl = false)
+function recaptcha_get_html($pubkey, $error = null, $use_ssl = false, $ajax=true)
 {
-	if ($pubkey == null || $pubkey == '') {
-		die ("To use reCAPTCHA you must get an API key from <a href='http://recaptcha.net/api/getkey'>http://recaptcha.net/api/getkey</a>");
-	}
+        if ($pubkey == null || $pubkey == '') {
+                die ("To use reCAPTCHA you must get an API key from <a href='http://recaptcha.net/api/getkey'>http://recaptcha.net/api/getkey</a>");
+        }
 	
-	if ($use_ssl) {
+        if ($use_ssl) {
                 $server = RECAPTCHA_API_SECURE_SERVER;
         } else {
                 $server = RECAPTCHA_API_SERVER;
         }
+        
 
-        $errorpart = "";
-        if ($error) {
-           $errorpart = "&amp;error=" . $error;
+        if( $ajax ){
+                global $recaptcha_ajax_instances;
+                $i = $recaptcha_ajax_instances++;
+                $id = "recaptcha_ajax_instance_$i";
+                $errorpart = "<span style='color: red;'>$error</span>";
+                return "
+                        <div id='recaptcha_ajax_instance_$i'></div>
+                        <script type='text/javascript' src='http://api.recaptcha.net/js/recaptcha_ajax.js'></script>
+                        <script type='text/javascript'>
+                        (function(){
+                                function loadRecaptcha(){
+                                        Recaptcha.create('$pubkey','$id');
+                                }
+                                if( window.addEvent ){
+                                        window.addEvent('domready', loadRecaptcha);
+                                }
+                                else{
+                                        if( window.addEventListener ){ window.addEventListener('load', loadRecaptcha); }
+                                        else if( window.attachEvent ){ window.attachEvent('onload', loadRecaptcha); }
+                                        else{ old = window.onload; window.onload = function(){ if( old && typeof old == 'function'){ old(); } loadRecaptcha(); }; }
+                                }
+                        })();
+                        </script>
+                ";
         }
-        return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
+        else{
+                $errorpart = "";
+                if ($error) {
+                   $errorpart = "&amp;error=" . $error;
+                }
+                return '<script type="text/javascript" src="'. $server . '/challenge?k=' . $pubkey . $errorpart . '"></script>
 
-	<noscript>
-  		<iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
-  		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
-	</noscript>';
+                        <noscript>
+                            <iframe src="'. $server . '/noscript?k=' . $pubkey . $errorpart . '" height="300" width="500" frameborder="0"></iframe><br/>
+                            <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+                            <input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+                        </noscript>';
+        }
+        
 }
 
 
