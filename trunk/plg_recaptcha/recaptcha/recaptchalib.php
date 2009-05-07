@@ -133,7 +133,7 @@ function recaptcha_get_html($pubkey, $error = null, $use_ssl = false, $ajax=true
                                         window.addEvent('domready', loadRecaptcha);
                                 }
                                 else{
-                                        if( window.addEventListener ){ window.addEventListener('load', loadRecaptcha); }
+                                        if( window.addEventListener ){ window.addEventListener('load', loadRecaptcha, false); }
                                         else if( window.attachEvent ){ window.attachEvent('onload', loadRecaptcha); }
                                         else{ old = window.onload; window.onload = function(){ if( old && typeof old == 'function'){ old(); } loadRecaptcha(); }; }
                                 }
