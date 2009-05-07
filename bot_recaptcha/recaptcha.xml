@@ -18,6 +18,10 @@
 		<filename>recaptcha/api.php</filename>
 	</files>
 	<params>
+		<param type="radio" name="ajax" default="1" label="Use Ajax API">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
 		<param type="text" name="public" default='' label="Public Key" />
 		<param type="text" name="private" default='' label="Private Key" />
 		<param type="radio" name="addToContact" default='1' label="Add to Contact Page">

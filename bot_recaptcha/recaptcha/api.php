@@ -9,6 +9,8 @@ class ReCaptcha{
 	
 	var $_resp;
 	
+	var $_ajax = true;
+	
 	var $_submitted = false;
 	
 	var $_processed = false;
@@ -45,6 +47,12 @@ class ReCaptcha{
 		$inst->_set('privateKey',$private);
 	}
 	
+	function setAjaxMode($mode=true)
+	{
+		$inst =& ReCaptcha::getInstance();
+		$inst->_set('ajax', $mode);
+	}
+	
 	function _set($key,$value)
 	{
 		$key = '_'.$key;
@@ -78,7 +86,7 @@ class ReCaptcha{
 			}
 			
 		}
-		$this->_html = recaptcha_get_html($this->_get('publicKey'), $this->_get('error') );
+		$this->_html = recaptcha_get_html($this->_get('publicKey'), $this->_get('error'), $this->_ajax );
 		$this->_processed = true;
 	}
 	
