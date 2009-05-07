@@ -25,4 +25,4 @@ The parameters on the right provide textfields for the public and private keys.
   happens.
 
 === Add to Contact Page ===
-  Automatically adds recaptcha to the default login page.
+  Automatically adds recaptcha to the default contact page.
