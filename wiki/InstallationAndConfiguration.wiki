@@ -26,3 +26,4 @@ The parameters on the right provide textfields for the public and private keys.
 
 === Add to Contact Page ===
   Automatically adds recaptcha to the default contact page.
+  If you are installing this for use on a Contact Page in Joomla 1.0, please see [AddToContactPageInJoomla10 this guide].
